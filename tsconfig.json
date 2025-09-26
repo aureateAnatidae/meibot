@@ -9,11 +9,13 @@
         "module": "NodeNext",
         "moduleResolution": "NodeNext",
         "target": "ESNext",
+        "rootDir": ".",
+        "outDir": "build",
 
         "strict": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
-
+        
         "baseUrl": ".",
         "paths": {
             "@events/*": ["events/*"],

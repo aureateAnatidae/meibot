@@ -15,7 +15,6 @@ for (const event of event_handlers) {
         client.once(event.name, (...args) => event.execute(...args));
     } else {
         client.on(event.name, (...args) => {
-            console.log(...args);
             event.execute(...args);
         });
     }
