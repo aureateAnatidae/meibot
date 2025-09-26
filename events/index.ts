@@ -1,3 +1,4 @@
-import ClientReady from "./ClientReady";
+import ClientReady from "@events/ClientReady";
+import MessageCreate from "@events/MessageCreate";
 
-export const event_handlers = [ClientReady];
+export const event_handlers = [ClientReady, MessageCreate];
