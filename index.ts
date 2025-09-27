@@ -1,4 +1,5 @@
 import { event_handlers } from "@events";
+import  init_tables  from "@db/init_tables";
 import { Client, GatewayIntentBits } from "discord.js";
 
 const client = new Client({
@@ -8,6 +9,8 @@ const client = new Client({
         GatewayIntentBits.MessageContent,
     ],
 });
+
+await init_tables()
 
 // Registers each event's signal to its respective `execute` on the client.
 for (const event of event_handlers) {

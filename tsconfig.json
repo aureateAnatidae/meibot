@@ -19,7 +19,8 @@
         "baseUrl": ".",
         "paths": {
             "@events/*": ["events/*"],
-            "@events": ["events"]
+            "@events": ["events"],
+            "@db/*": ["db/*"]
         }
     }
 }
