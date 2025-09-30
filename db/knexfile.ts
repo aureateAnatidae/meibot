@@ -1,5 +1,4 @@
-import { knex } from "knex";
-
+import knex, { type Knex } from "knex";
 
 // TODO: https://knexjs.org/guide/#log
 export const config = {
@@ -8,3 +7,5 @@ export const config = {
         filename: "./meibot.db",
     },
 };
+
+export const knexDb: Knex = knex(config);

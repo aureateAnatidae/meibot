@@ -1,24 +1,34 @@
-import { config } from "@db/knexfile";
-import knex, { type Knex } from "knex";
+import { ImnickTable } from "@db/Imnick";
+import { knexDb } from "@db/knexfile";
+import { UserTable } from "@db/User";
+import type { Knex } from "knex";
 
 import pino from "pino";
 
 const log = pino();
 
-const knexDb: Knex = knex(config);
-export default async function init_tables() {
-    const exists = await knexDb.schema.hasTable("User");
+export async function create_table_if_notexists(
+    db: Knex,
+    tableName: string,
+    callback: (tableBuilder: Knex.CreateTableBuilder) => any,
+): Promise<Knex.SchemaBuilder> {
+    const exists = await db.schema.hasTable(tableName);
     if (!exists) {
-        log.info("`User` table not found. Creating table for `User`.");
-        knexDb.schema.createTable("User", (table) => {
-            table.string("id");
-            table.string("guild_id");
-            table.string("base_nick");
-            table.string("gimmick_nick");
-        });
+        log.info(`${tableName} table not found. Creating table for ${tableName}.`);
+        await db.schema.createTable(tableName, callback);
+        log.info(`${tableName} table successfully initialized.`);
     } else {
         log.info(
-            "Database already contains `User` table. Skipping initialization.",
+            `Database already contains ${tableName} table. Skipping initialization.`,
         );
     }
+}
+
+export default async function init_tables() {
+    const tables = [ImnickTable, UserTable];
+    const trx = await knexDb.transaction();
+    for (const table of tables) {
+        await create_table_if_notexists(trx, table.table_name, table.initialize);
+    }
+    await trx.commit()
 }

@@ -1,6 +1,11 @@
-import { event_handlers } from "@events";
-import  init_tables  from "@db/init_tables";
-import { Client, GatewayIntentBits } from "discord.js";
+import { command_handlers } from "@command";
+import init_tables from "@db/init_tables";
+import { event_handlers } from "@event";
+import deploy_commands from "deploy-commands";
+import { Client, Collection, GatewayIntentBits } from "discord.js";
+import pino from "pino";
+
+const log = pino(); // TODO: Unify, just use one logger? Import from a logging config file? Child loggers?
 
 const client = new Client({
     intents: [
@@ -10,7 +15,46 @@ const client = new Client({
     ],
 });
 
-await init_tables()
+await init_tables();
+
+// Registers each command to the client
+client.commands = new Collection();
+for (const command of command_handlers) {
+    if ("data" in command && "execute" in command) {
+        client.commands.set(command.data.name, command);
+    } else {
+        log.warn(
+            `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`,
+        );
+    }
+}
+// await deploy_commands(client.commands)
+
+client.on("interactionCreate", async (interaction) => {
+	// Check to make sure interaction is a command
+	if (!interaction.isCommand()) return;
+	// Check to make sure user is not a bot.
+	if (interaction.user.bot) return;
+	const command = client.commands.get(interaction.commandName);
+	if (!command) return;
+	try {
+		await command.execute(interaction);
+	} catch (err) {
+		log.error(err);
+		if (interaction.replied || interaction.deferred) {
+			interaction.followUp({
+				content: "There was an error while executing this command!",
+				ephemeral: true,
+			});
+		} else {
+			interaction.reply({
+				content: "There was an error while executing this command!",
+				ephemeral: true,
+			});
+		}
+	}
+});
+
 
 // Registers each event's signal to its respective `execute` on the client.
 for (const event of event_handlers) {

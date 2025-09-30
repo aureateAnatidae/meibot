@@ -18,8 +18,10 @@
         
         "baseUrl": ".",
         "paths": {
-            "@events/*": ["events/*"],
-            "@events": ["events"],
+            "@event/*": ["interaction/event/*"],
+            "@event": ["interaction/event"],
+            "@command/*": ["interaction/command/*"],
+            "@command": ["interaction/command"],
             "@db/*": ["db/*"]
         }
     }
