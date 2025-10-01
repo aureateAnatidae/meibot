@@ -9,5 +9,5 @@ With thanks to:
 
 ## To run:
 
-Fill the appropriate values in a .env fulfilling values specified in .env.example.
-Create an empty meibot.db file.
+Fill the appropriate values in a `.env` fulfilling values specified in `.env.example`.
+Create an empty `meibot.db` file. It must be a file, not a directory. If a `meibot.db/` directory is inadvertently generated, delete it and create an empty `meibot.db` file.
