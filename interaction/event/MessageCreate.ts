@@ -10,7 +10,7 @@ const MessageCreate = {
         if (message.author.bot) return;
         const im_nick = im_regex.exec(message.content)?.[1];
 
-        if (Math.random() < 0.5 && im_nick) {
+        if (Math.random() < 0.1 && im_nick) {
             try {
                 await nickname_change(message, im_nick);
             } catch (err) {
