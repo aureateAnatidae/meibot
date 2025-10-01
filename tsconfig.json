@@ -1,11 +1,6 @@
 {
     "compilerOptions": {
-        "lib": [
-            "es2024",
-            "ESNext.Array",
-            "ESNext.Collection",
-            "ESNext.Promise"
-        ],
+        "lib": ["es2024", "ESNext.Array", "ESNext.Collection", "ESNext.Promise"],
         "module": "NodeNext",
         "moduleResolution": "NodeNext",
         "target": "ESNext",
@@ -15,7 +10,7 @@
         "strict": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
-        
+
         "baseUrl": ".",
         "paths": {
             "@event/*": ["interaction/event/*"],

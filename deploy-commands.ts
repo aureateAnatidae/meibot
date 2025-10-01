@@ -3,7 +3,6 @@ import { type ApplicationCommand, type Collection, REST, Routes } from "discord.
 export default async function deploy_commands(commands: Collection<ApplicationCommand>) {
     const rest = new REST().setToken(process.env.DISCORD_TOKEN);
     const _commands = commands.map((command) => command.data.toJSON());
-    console.log(_commands)
     try {
         console.log(`Started refreshing ${_commands.length} application (/) commands.`);
         const data = await rest.put(

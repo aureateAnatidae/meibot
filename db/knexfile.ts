@@ -6,6 +6,7 @@ export const config = {
     connection: {
         filename: "./meibot.db",
     },
+    useNullAsDefault: true,
 };
 
 export const knexDb: Knex = knex(config);

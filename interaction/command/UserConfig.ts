@@ -1,4 +1,4 @@
-import { addUser } from "@db/User";
+import { addImnick, removeImnick } from "@db/Imnick";
 import {
     type ApplicationCommand,
     type CacheType,
@@ -23,7 +23,10 @@ const UserConfig: ApplicationCommand = {
                         .setName("property")
                         .setDescription("Property to modify")
                         .setRequired(true)
-                        .addChoices({ name: "imnick", value: "imnick" }),
+                        .addChoices(
+                            { name: "imnick", value: "imnick" },
+                            { name: "testify", value: "testify" },
+                        ),
                 )
                 .addStringOption((option) =>
                     option
@@ -33,22 +36,37 @@ const UserConfig: ApplicationCommand = {
                 ),
         ),
     async handleSetProperty(interaction: CommandInteraction<CacheType>) {
-        return;
+        const property = interaction.options.getString("property");
+        const value = interaction.options.getString("value");
+
+        switch (true) {
+            case property === "imnick" && value === "true": {
+                const member = interaction.member;
+                await addImnick(member.user.id, member.guild.id);
+                return;
+            }
+            case property === "imnick" && value === "false": {
+                const member = interaction.member;
+                await removeImnick(member.user.id, member.guild.id);
+                return;
+            }
+        }
     },
     async execute(interaction: CommandInteraction<CacheType>) {
         const subcommand = interaction.options.getSubcommand();
         switch (subcommand) {
-            case "set":
-                console.log(interaction);
+            case "set": {
+                await this.handleSetProperty(interaction);
                 await interaction.reply({
-                    content: `Card successfully`,
-                    ephemeral: true,
+                    content: "Successfully set property.",
+                    flags: MessageFlags.Ephemeral
                 });
                 return;
+            }
             default:
                 await interaction.reply({
-                    content: `Card successfully`,
-                    ephemeral: true,
+                    content: "Invalid subcommand (should be impossible to reach)",
+                    flags: MessageFlags.Ephemeral
                 });
                 throw Error(`Unexpected subcommand passed to /config: ${subcommand}`);
         }
