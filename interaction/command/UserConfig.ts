@@ -29,7 +29,7 @@ const UserConfig: ApplicationCommand = {
                 .addStringOption((option) =>
                     option
                         .setName("value")
-                        .setDescription("New value for the specified property")
+                        .setDescription("New value for the specified property (expected values for imnick: [true, false])")
                         .setRequired(true),
                 ),
         ),
