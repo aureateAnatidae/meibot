@@ -3,6 +3,7 @@ import {
     type ApplicationCommand,
     type CacheType,
     type CommandInteraction,
+    MessageFlags,
     SlashCommandBuilder,
 } from "discord.js";
 import pino from "pino";
@@ -23,10 +24,7 @@ const UserConfig: ApplicationCommand = {
                         .setName("property")
                         .setDescription("Property to modify")
                         .setRequired(true)
-                        .addChoices(
-                            { name: "imnick", value: "imnick" },
-                            { name: "testify", value: "testify" },
-                        ),
+                        .addChoices({ name: "imnick", value: "imnick" }),
                 )
                 .addStringOption((option) =>
                     option
@@ -59,14 +57,14 @@ const UserConfig: ApplicationCommand = {
                 await this.handleSetProperty(interaction);
                 await interaction.reply({
                     content: "Successfully set property.",
-                    flags: MessageFlags.Ephemeral
+                    flags: MessageFlags.Ephemeral,
                 });
                 return;
             }
             default:
                 await interaction.reply({
                     content: "Invalid subcommand (should be impossible to reach)",
-                    flags: MessageFlags.Ephemeral
+                    flags: MessageFlags.Ephemeral,
                 });
                 throw Error(`Unexpected subcommand passed to /config: ${subcommand}`);
         }
