@@ -19,7 +19,7 @@ const client = new Client({
 await init_tables();
 
 // Registers each command to the client
-if (!process.env.SKIP_DEPLOY_COMMANDS) {
+if (process.env.SKIP_DEPLOY_COMMANDS !== 1) {
     client.commands = new Collection();
     for (const command of command_handlers) {
         if ("data" in command && "execute" in command) {

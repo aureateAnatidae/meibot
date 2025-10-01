@@ -5,3 +5,5 @@ services:
             dockerfile: Dockerfile
         env_file: .env
         restart: always
+        volumes:
+          -  ./meibot.db:/app/meibot.db
