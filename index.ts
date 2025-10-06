@@ -1,7 +1,7 @@
 import { command_handlers } from "@command";
 import init_tables from "@db/init_tables";
 import { event_handlers } from "@event";
-import deploy_commands from "deploy-commands";
+import deploy_commands from "helper/deploy-commands";
 import { Client, Collection, GatewayIntentBits, MessageFlags } from "discord.js";
 import pino from "pino";
 
