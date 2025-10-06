@@ -9,7 +9,7 @@ With thanks to:
 
 ## To run:
 
-> No background in software? No friends with the know-how? Skip to the good part? **I encourage you to host it yourself since this bot has access to all messages sent in the server**, but you can install my version to your server with [this link](https://discord.com/oauth2/authorize?client_id=1420903496554647673).
+> No background in software? No friends with the know-how? Skip to the good part? **I encourage you to host it yourself since this bot requires access to all messages sent in the server** (does not store them), but you can install my version to your server with [this link](https://discord.com/oauth2/authorize?client_id=1420903496554647673). I make no guarantees on uptime, though.
 
 Go to [the Discord developer portal](https://discord.com/developers/applications) and create a bot.
 From "**Installation**", give it the scope
@@ -28,6 +28,15 @@ Fill the appropriate values in a `.env` fulfilling values specified in `.env.exa
 Create an empty `meibot.db` file. It must be a file, not a directory. If a `meibot.db/` directory is inadvertently generated, delete it and create an empty `meibot.db` file.
 
 To deploy, run `docker compose up`.
+
+## Usage
+
+Enable the nickname change feature for yourself by using the Discord command:
+```bash
+/config set nick-enabled true
+# For more help:
+/config help
+```
 
 ## Troubleshooting
 
