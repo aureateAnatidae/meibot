@@ -1,17 +1,17 @@
-import { ImnickTable } from "@db/Imnick";
 import { knexDb } from "@db/knexfile";
+import { NickTable } from "@db/Nick";
 import type { Knex } from "knex";
 
 import pino from "pino";
 
 const log = pino();
 
-const tables = [ImnickTable];
+const tables = [NickTable];
 
 export async function create_table_if_notexists(
     db: Knex,
     tableName: string,
-    callback: (tableBuilder: Knex.CreateTableBuilder) => any,
+    callback: (tableBuilder: Knex.CreateTableBuilder) => void,
 ): Promise<Knex.SchemaBuilder> {
     const exists = await db.schema.hasTable(tableName);
     if (!exists) {
@@ -19,9 +19,7 @@ export async function create_table_if_notexists(
         await db.schema.createTable(tableName, callback);
         log.info(`${tableName} table successfully initialized.`);
     } else {
-        log.info(
-            `Database already contains ${tableName} table. Skipping initialization.`,
-        );
+        log.info(`Database already contains ${tableName} table. Skipping initialization.`);
     }
 }
 
@@ -35,9 +33,7 @@ export default async function init_tables(db: Knex = knexDb) {
 
 export async function teardown(db: Knex = knexDb) {
     if (process.env.NODE_ENV === "production") {
-        log.error(
-            "`teardown` was called on a production database -- no action will be performed",
-        );
+        log.error("`teardown` was called on a production database -- no action will be performed");
         return;
     }
     for (const table of tables) {

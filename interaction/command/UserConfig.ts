@@ -1,5 +1,5 @@
 import readHelpFile from "@command/help/readHelpFile";
-import { addImnick, removeImnick } from "@db/Imnick";
+import { addNick, removeNick } from "@db/Nick";
 import { version } from "@package";
 import {
     type ApplicationCommand,
@@ -11,7 +11,7 @@ import {
 } from "discord.js";
 import pino from "pino";
 
-const log = pino();
+const _log = pino();
 
 // 'If you opt in, there\'s a 10% chance your name will change when you type a message starting with "im" or "i\'m"! You can also opt-out of this feature.'
 const UserConfig: ApplicationCommand = {
@@ -33,7 +33,7 @@ const UserConfig: ApplicationCommand = {
                     option
                         .setName("value")
                         .setDescription(
-                            "New value for the specified property (expected values for imnick: [true, false])",
+                            "New value for the specified property (expected values for nick-enabled: [true, false])",
                         )
                         .setRequired(true),
                 ),
@@ -48,12 +48,12 @@ const UserConfig: ApplicationCommand = {
         switch (true) {
             case property === "nick-enabled" && value === "true": {
                 const member = interaction.member;
-                await addImnick(member.user.id, member.guild.id);
+                await addNick(member.user.id, member.guild.id);
                 return;
             }
             case property === "nick-enabled" && value === "false": {
                 const member = interaction.member;
-                await removeImnick(member.user.id, member.guild.id);
+                await removeNick(member.user.id, member.guild.id);
                 return;
             }
         }

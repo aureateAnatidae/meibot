@@ -1,4 +1,4 @@
-import { getImnick, updateImnick } from "@db/Imnick";
+import { getNick, updateNick } from "@db/Nick";
 import { Events, type GuildMember, type Message } from "discord.js";
 import pino from "pino";
 
@@ -72,9 +72,9 @@ async function nickname_change(guild_member: GuildMember, new_gimmick_nick: stri
     const user_id = guild_member.user.id;
     const guild_id = guild_member.guild.id;
 
-    const current_record = await getImnick(user_id, guild_id);
+    const current_record = await getNick(user_id, guild_id);
     if (!current_record) {
-        log.debug("User has no matching record in Imnick (has not opted in)");
+        log.debug("User has no matching record in Nick (has not opted in)");
         return;
     }
     const { base_nick, gimmick_nick } = current_record;
@@ -90,7 +90,7 @@ async function nickname_change(guild_member: GuildMember, new_gimmick_nick: stri
         }
     };
 
-    await updateImnick(user_id, guild_id, new_base_nick(), new_gimmick_nick);
+    await updateNick(user_id, guild_id, new_base_nick(), new_gimmick_nick);
     await guild_member.setNickname(new_gimmick_nick);
 
     log.debug(`Changed nickname of user ${user_id}`);
@@ -101,14 +101,14 @@ async function nickname_reset(message: Message) {
     const user_id = message.author.id;
     const guild_id = message.guild.id;
 
-    const current_record = await getImnick(user_id, guild_id);
+    const current_record = await getNick(user_id, guild_id);
     if (!current_record) {
-        log.debug("User has no matching record in Imnick (has not opted in)");
+        log.debug("User has no matching record in Nick (has not opted in)");
         return;
     }
     const { base_nick, gimmick_nick } = current_record;
     if (!base_nick) {
-        log.debug("Imnick has not occurred to the user. Skipping");
+        log.debug("nickname change has not occurred to the user. Skipping");
         return;
     }
 
@@ -117,20 +117,20 @@ async function nickname_reset(message: Message) {
     });
 
     // If the user triggers this event from base_nick != null, then change their username to
-    // base_nick and reset the record in the Imnick table (base_nick = null, gimmick_nick = null).
+    // base_nick and reset the record in the Nick table (base_nick = null, gimmick_nick = null).
     // If the user changed their username manually after being given a gimmick nickname,
-    // then reset the record in the Imnick table (base_nick = null, gimmick_nick = null)
+    // then reset the record in the Nick table (base_nick = null, gimmick_nick = null)
     // and do not change the nickname.
     const current_nick = guild_member.nickname ?? guild_member.user.globalName;
 
     if (gimmick_nick && gimmick_nick !== current_nick) {
-        log.warn("User changed nickname between Imnick trigger and nickname reset. Reset record");
+        log.warn("User changed nickname between nickname trigger and nickname reset. Reset record");
     } else if (base_nick) {
         await guild_member.setNickname(base_nick);
         log.debug(`Resetted nickname of user ${message.author.id}`);
     }
 
-    await updateImnick(user_id, guild_id, null, null);
+    await updateNick(user_id, guild_id, null, null);
     return;
 }
 
