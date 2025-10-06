@@ -9,6 +9,8 @@ With thanks to:
 
 ## To run:
 
+> No background in software? No friends with the know-how? Skip to the good part? **I encourage you to host it yourself since this bot has access to all messages sent in the server**, but you can install my version to your server with [this link](https://discord.com/oauth2/authorize?client_id=1420903496554647673).
+
 Go to [the Discord developer portal](https://discord.com/developers/applications) and create a bot.
 From "**Installation**", give it the scope
 ```
