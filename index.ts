@@ -1,8 +1,8 @@
 import { command_handlers } from "@command";
 import init_tables from "@db/init_tables";
 import { event_handlers } from "@event";
-import deploy_commands from "helper/deploy-commands";
 import { Client, Collection, GatewayIntentBits, MessageFlags } from "discord.js";
+import deploy_commands from "helper/deploy-commands";
 import pino from "pino";
 
 const log = pino(); // TODO: Unify, just use one logger? Import from a logging config file? Child loggers?
@@ -32,7 +32,7 @@ if (process.env.SKIP_DEPLOY_COMMANDS !== "1") {
     }
     await deploy_commands(client.commands);
 } else {
-    log.info("SKIP_DEPLOY_COMMANDS specified. Skipping registration of commands to Discord.")
+    log.info("SKIP_DEPLOY_COMMANDS specified. Skipping registration of commands to Discord.");
 }
 
 client.on("interactionCreate", async (interaction) => {
