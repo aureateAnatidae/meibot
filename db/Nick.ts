@@ -69,19 +69,17 @@ export function updateNick(
     base_nick: string | null,
     gimmick_nick: string | null,
 ) {
-    return (
-        knexDb("Nick")
-            .where({ user_id, guild_id })
-            .update({ base_nick, gimmick_nick })
-            .then((result) => {
-                log.debug(`Successfully updated ${user_id}:${guild_id} in Nick`);
-                return result;
-            })
-            .catch((err) => {
-                log.error(err, "Failed to update record in Nick");
-                throw err;
-            })
-    );
+    return knexDb("Nick")
+        .where({ user_id, guild_id })
+        .update({ base_nick, gimmick_nick })
+        .then((result) => {
+            log.debug(`Successfully updated ${user_id}:${guild_id} in Nick`);
+            return result;
+        })
+        .catch((err) => {
+            log.error(err, "Failed to update record in Nick");
+            throw err;
+        });
 }
 
 /**

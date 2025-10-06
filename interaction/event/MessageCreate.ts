@@ -15,35 +15,23 @@ const MessageCreate = {
         const youre_nick = youre_regex.exec(message.content)?.[1];
 
         if (Math.random() < 0.1 && (im_nick || (message.reference && youre_nick))) {
-            if (im_nick) {
-                try {
-                    const guild_member: GuildMember = await message.guild.members.fetch({
-                        user: message.author,
-                    });
+            try {
+                const target_user: GuildMember = im_nick
+                    ? message.author
+                    : (await message.channel.messages.fetch(message.reference.messageId)).author;
 
-                    await nickname_change(guild_member, im_nick);
-                } catch (err) {
-                    log.error(err, `Failed to change nickname of user ${message.author.id}`);
+                const guild_member = await message.guild.members.fetch({
+                    user: target_user,
+                });
+
+                if (!guild_member.user.bot) {
+                    await nickname_change(guild_member, im_nick || youre_nick, message);
                 }
-            } else if (message.reference && youre_nick) {
-                try {
-                    const referenced_message: Message = await message.channel.messages.fetch(
-                        message.reference.messageId,
-                    );
-
-                    const guild_member: GuildMember = await message.guild.members.fetch({
-                        user: referenced_message.author,
-                    });
-
-                    if (!guild_member.user.bot) {
-                        await nickname_change(guild_member, youre_nick);
-                    }
-                } catch (err) {
-                    log.error(
-                        err,
-                        `Failed to change nickname of user referenced by ${message.author.id}`,
-                    );
-                }
+            } catch (err) {
+                log.error(
+                    err,
+                    `Failed to change nickname of user ${im_nick ? "" : "referenced by "}${message.author.id}`,
+                );
             }
         } else {
             try {
@@ -62,7 +50,11 @@ const MessageCreate = {
  * But it's not a concern, and premature optimization is sin.
  * Optimize it when you'll never touch this feature again.
  **/
-async function nickname_change(guild_member: GuildMember, new_gimmick_nick: string) {
+async function nickname_change(
+    guild_member: GuildMember,
+    new_gimmick_nick: string,
+    message: Message,
+) {
     // If the user triggers this event from base_nick == null, then save their current nickname
     // so that we can reset it afterwards.
     // If the user triggers this event and already has a base_nick, then keep that base_nick.
@@ -92,6 +84,11 @@ async function nickname_change(guild_member: GuildMember, new_gimmick_nick: stri
 
     await updateNick(user_id, guild_id, new_base_nick(), new_gimmick_nick);
     await guild_member.setNickname(new_gimmick_nick);
+    try {
+        await message.react("🔥");
+    } catch (err) {
+        log.warn(err, `Failed to add fire emoticon reaction to message ${message.id}`);
+    }
 
     log.debug(`Changed nickname of user ${user_id}`);
     return;
