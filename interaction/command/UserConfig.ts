@@ -1,8 +1,11 @@
+import readHelpFile from "@command/help/readHelpFile";
 import { addImnick, removeImnick } from "@db/Imnick";
+import { version } from "@package";
 import {
     type ApplicationCommand,
     type CacheType,
     type CommandInteraction,
+    ContainerBuilder,
     MessageFlags,
     SlashCommandBuilder,
 } from "discord.js";
@@ -24,31 +27,43 @@ const UserConfig: ApplicationCommand = {
                         .setName("property")
                         .setDescription("Property to modify")
                         .setRequired(true)
-                        .addChoices({ name: "imnick", value: "imnick" }),
+                        .addChoices({ name: "nick-enabled", value: "nick-enabled" }),
                 )
                 .addStringOption((option) =>
                     option
                         .setName("value")
-                        .setDescription("New value for the specified property (expected values for imnick: [true, false])")
+                        .setDescription(
+                            "New value for the specified property (expected values for imnick: [true, false])",
+                        )
                         .setRequired(true),
                 ),
+        )
+        .addSubcommand((subcommand) =>
+            subcommand.setName("help").setDescription("Display the help message for /config"),
         ),
     async handleSetProperty(interaction: CommandInteraction<CacheType>) {
         const property = interaction.options.getString("property");
         const value = interaction.options.getString("value");
 
         switch (true) {
-            case property === "imnick" && value === "true": {
+            case property === "nick-enabled" && value === "true": {
                 const member = interaction.member;
                 await addImnick(member.user.id, member.guild.id);
                 return;
             }
-            case property === "imnick" && value === "false": {
+            case property === "nick-enabled" && value === "false": {
                 const member = interaction.member;
                 await removeImnick(member.user.id, member.guild.id);
                 return;
             }
         }
+    },
+    async handleHelp() {
+        const config_help = await readHelpFile("UserConfigHelp");
+        return new ContainerBuilder().addTextDisplayComponents(
+            (helpHeader) => helpHeader.setContent(`# Meibot v${version}`),
+            (configHeader) => configHeader.setContent(config_help),
+        );
     },
     async execute(interaction: CommandInteraction<CacheType>) {
         const subcommand = interaction.options.getSubcommand();
@@ -58,6 +73,13 @@ const UserConfig: ApplicationCommand = {
                 await interaction.reply({
                     content: "Successfully set property.",
                     flags: MessageFlags.Ephemeral,
+                });
+                return;
+            }
+            case "help": {
+                await interaction.reply({
+                    components: [await this.handleHelp()],
+                    flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral],
                 });
                 return;
             }

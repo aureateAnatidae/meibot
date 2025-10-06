@@ -17,7 +17,8 @@
             "@event": ["interaction/event"],
             "@command/*": ["interaction/command/*"],
             "@command": ["interaction/command"],
-            "@db/*": ["db/*"]
+            "@db/*": ["db/*"],
+            "@package": ["package.json"]
         }
     }
 }
