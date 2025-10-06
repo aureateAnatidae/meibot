@@ -4,8 +4,8 @@ import pino from "pino";
 
 const log = pino();
 
-const im_regex = /^(?:im|i'm) (.{3,30})(?:\s|$)/i;
-const youre_regex = /^(?:youre|you're) (.{3,30})(?:\s|$)/i;
+const im_regex = /^(?:i am|im|i'm) (.{3,30})(?:\s|$)/i;
+const youre_regex = /^(?:you are|youre|you're) (.{3,30})(?:\s|$)/i;
 
 const MessageCreate = {
     name: Events.MessageCreate,
@@ -24,7 +24,7 @@ const MessageCreate = {
                     user: target_user,
                 });
 
-                if (!guild_member.user.bot) {
+                if (!guild_member.user.bot && guild_member.user.id !== guild_member.guild.ownerId) {
                     await nickname_change(guild_member, im_nick || youre_nick, message);
                 }
             } catch (err) {
