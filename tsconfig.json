@@ -11,14 +11,14 @@
         "esModuleInterop": true,
         "skipLibCheck": true,
 
-        "baseUrl": ".",
+        "baseUrl": "src",
         "paths": {
             "@event/*": ["interaction/event/*"],
             "@event": ["interaction/event"],
             "@command/*": ["interaction/command/*"],
             "@command": ["interaction/command"],
             "@db/*": ["db/*"],
-            "@package": ["package.json"]
+            "@package": ["../package.json"]
         }
     }
 }

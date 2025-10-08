@@ -7,11 +7,11 @@
     "scripts": {
         "start": "node build/index.js",
         "start:env": "node --env-file=.env build/index.js",
-        "dev": "tsx --env-file=.env index.ts",
-        "build": "esbuild index.ts --bundle --packages=external --platform=node --target=node24 --outdir=build --format=esm",
+        "dev": "tsx --env-file=.env src/index.ts",
+        "build": "esbuild src/index.ts --bundle --packages=external --platform=node --target=node24 --outdir=build --format=esm",
         "test": "vitest",
-        "check": "biome check interaction/ db/",
-        "lint": "biome lint interaction/ db/"
+        "check": "biome check src/",
+        "lint": "biome lint src/"
     },
     "dependencies": {
         "better-sqlite3": "^12.4.1",
